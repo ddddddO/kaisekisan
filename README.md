@@ -1,9 +1,21 @@
 # kaisekisan
 
-## Install
+## Installation
 
+Go
 ```console
-go install github.com/ddddddO/kaisekisan/cmd/kaisekisan@latest
+$ go install github.com/ddddddO/kaisekisan/cmd/kaisekisan@latest
+```
+
+Homebrew
+```console
+$ brew install ddddddO/tap/kaisekisan
+```
+
+Scoop
+```console
+$ scoop bucket add ddddddO https://github.com/ddddddO/scoop-bucket.git
+$ scoop install ddddddO/kaisekisan
 ```
 
 ## Usage
