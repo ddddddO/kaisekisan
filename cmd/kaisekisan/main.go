@@ -9,6 +9,12 @@ import (
 	"github.com/ddddddO/kaisekisan"
 )
 
+// These variables are set in build step
+var (
+	Version  = "unset"
+	Revision = "unset"
+)
+
 func main() {
 	if len(os.Args) != 3 {
 		exit("Required file and target column number.")
