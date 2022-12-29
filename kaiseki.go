@@ -51,11 +51,7 @@ func Kaiseki(r io.Reader, w io.Writer, columnNumber int) error {
 	}
 
 	csvWriter.Flush()
-	if err := csvWriter.Error(); err != nil {
-		return err
-	}
-
-	return nil
+	return csvWriter.Error()
 }
 
 func insert(origin []string, columnNumber int, s string) []string {

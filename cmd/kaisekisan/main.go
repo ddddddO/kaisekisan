@@ -24,11 +24,9 @@ func main() {
 	if err != nil {
 		exit(err)
 	}
-
 	if isNotExist(in) {
 		exit("Not exist.")
 	}
-
 	inFile, err := os.Open(in)
 	if err != nil {
 		exit(err)
