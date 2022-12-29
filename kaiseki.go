@@ -3,7 +3,6 @@ package kaisekisan
 import (
 	"encoding/csv"
 	"errors"
-	"fmt"
 	"io"
 	"strings"
 
@@ -43,7 +42,9 @@ func Kaiseki(r io.Reader, w io.Writer, columnNumber int) error {
 			continue
 		}
 
-		target := record[columnNumber-1]
+		// ここでスペースを削除しているのは、例えば、「千葉 真一」を与えると、「千葉」を解析してしまい、分類が地名になるため。
+		// 人名以外でもスペースが入る可能性はあるが、この際、スペースを削除することにした。
+		target := strings.ReplaceAll(record[columnNumber-1], " ", "")
 		result := t.Analyze(target)
 		ret := insert(record, columnNumber, result)
 
@@ -81,9 +82,36 @@ func newTokenizerKagome() (*tokenizerKagome, error) {
 func (t *tokenizerKagome) Analyze(in string) string {
 	tokens := t.Tokenize(in)
 	for _, token := range tokens {
-		features := strings.Join(token.Features()[0:4], "/")
-		return fmt.Sprintf("%v (origin: %s)", features, token.Surface)
+		// pos := strings.Join(token.POS(), "/")
+		// return fmt.Sprintf("%v (origin: %s)", pos, token.Surface)
+		return t.filter(token.POS())
 		// TODO: 一旦、解析結果の最初の行のみ
 	}
 	return ""
+}
+
+func (*tokenizerKagome) filter(ss []string) string {
+	filtered := ""
+	ippan := 0
+	sei := 0
+	for i := range ss {
+		filtered = ss[i]
+		if filtered == "一般" {
+			ippan = i
+		}
+		if filtered == "姓" {
+			sei = i
+		}
+		if filtered == "*" {
+			filtered = ss[i-1]
+			break
+		}
+	}
+	if 2 <= ippan {
+		return ss[ippan-1]
+	}
+	if 1 <= sei {
+		return ss[sei-1]
+	}
+	return filtered
 }

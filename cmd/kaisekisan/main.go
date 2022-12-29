@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/ddddddO/kaisekisan"
 )
@@ -25,7 +26,7 @@ func main() {
 		exit(err)
 	}
 	if isNotExist(in) {
-		exit("Not exist.")
+		exit("File does not exist.")
 	}
 	inFile, err := os.Open(in)
 	if err != nil {
@@ -33,7 +34,7 @@ func main() {
 	}
 	defer inFile.Close()
 
-	out := fmt.Sprintf("%s.out", in)
+	out := fmt.Sprintf("%s_out.csv", strings.TrimSuffix(in, ".csv"))
 	outFile, err := os.Create(out)
 	if err != nil {
 		exit(err)
