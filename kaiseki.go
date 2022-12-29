@@ -2,6 +2,7 @@ package kaisekisan
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -10,10 +11,10 @@ import (
 	"github.com/ikawaha/kagome/v2/tokenizer"
 )
 
-func Kaiseki(r io.Reader, w io.Writer) error {
+func Kaiseki(r io.Reader, w io.Writer, columnNumber int) error {
 	csvReader := csv.NewReader(r)
 	csvWriter := csv.NewWriter(w)
-	t, err := tokenizer.New(ipa.Dict(), tokenizer.OmitBosEos())
+	t, err := newTokenizerKagome()
 	if err != nil {
 		return err
 	}
@@ -29,8 +30,12 @@ func Kaiseki(r io.Reader, w io.Writer) error {
 		}
 
 		if isHeader {
-			record = append(record, "classification")
-			if err := csvWriter.Write(record); err != nil {
+			if len(record) < columnNumber {
+				return errors.New("Specified column number is too large.")
+			}
+
+			ret := insert(record, columnNumber, "classification")
+			if err := csvWriter.Write(ret); err != nil {
 				return err
 			}
 
@@ -38,20 +43,11 @@ func Kaiseki(r io.Reader, w io.Writer) error {
 			continue
 		}
 
-		// TODO: 一旦決め打ちで2番目
-		target := record[1]
+		target := record[columnNumber-1]
+		result := t.Analyze(target)
+		ret := insert(record, columnNumber, result)
 
-		ret := ""
-		tokens := t.Tokenize(target)
-		for _, token := range tokens {
-			features := strings.Join(token.Features(), ",")
-			ret = fmt.Sprintf("%s\t%v", token.Surface, features)
-			break
-			// TODO: 一旦、解析結果の最初の行のみ
-		}
-
-		record = append(record, ret)
-		csvWriter.Write(record)
+		csvWriter.Write(ret)
 	}
 
 	csvWriter.Flush()
@@ -60,4 +56,38 @@ func Kaiseki(r io.Reader, w io.Writer) error {
 	}
 
 	return nil
+}
+
+func insert(origin []string, columnNumber int, s string) []string {
+	left := make([]string, columnNumber)
+	right := make([]string, len(origin[columnNumber:]))
+	copy(left, origin[:columnNumber])
+	copy(right, origin[columnNumber:])
+	ret := append(left, s)
+	return append(ret, right...)
+}
+
+type tokenizerKagome struct {
+	*tokenizer.Tokenizer
+}
+
+func newTokenizerKagome() (*tokenizerKagome, error) {
+	t, err := tokenizer.New(ipa.Dict(), tokenizer.OmitBosEos())
+	if err != nil {
+		return nil, err
+	}
+
+	return &tokenizerKagome{
+		Tokenizer: t,
+	}, nil
+}
+
+func (t *tokenizerKagome) Analyze(in string) string {
+	tokens := t.Tokenize(in)
+	for _, token := range tokens {
+		features := strings.Join(token.Features()[0:4], "/")
+		return fmt.Sprintf("%v (origin: %s)", features, token.Surface)
+		// TODO: 一旦、解析結果の最初の行のみ
+	}
+	return ""
 }

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/ddddddO/kaisekisan"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		exit("required file")
+	if len(os.Args) != 3 {
+		exit("Required file and target column number.")
 	}
 
 	in, err := filepath.Abs(os.Args[1])
@@ -19,7 +20,7 @@ func main() {
 	}
 
 	if isNotExist(in) {
-		exit("no exist")
+		exit("Not exist.")
 	}
 
 	inFile, err := os.Open(in)
@@ -35,14 +36,22 @@ func main() {
 	}
 	defer outFile.Close()
 
-	if err := kaisekisan.Kaiseki(inFile, outFile); err != nil {
+	columnNumber, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		exit(err)
+	}
+	if columnNumber <= 0 {
+		exit("Please specify 1 or more.")
+	}
+
+	if err := kaisekisan.Kaiseki(inFile, outFile, columnNumber); err != nil {
 		if err := os.Remove(out); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
 		exit(err)
 	}
 
-	fmt.Fprintln(os.Stdin, "succeeded!")
+	fmt.Fprintln(os.Stdin, "Succeeded!")
 }
 
 func isNotExist(path string) bool {
