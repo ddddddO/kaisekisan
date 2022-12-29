@@ -1,4 +1,4 @@
-no,text,description
-0,テキスト,テキストです
-1,天気,晴れがいい
-2,千葉,県名
+no,text,description,classification
+0,テキスト,テキストです,ret
+1,天気,晴れがいい,ret
+2,千葉,県名,ret

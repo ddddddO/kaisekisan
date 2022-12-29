@@ -2,7 +2,6 @@ package kaisekisan
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
 )
 
@@ -21,6 +20,7 @@ func Kaiseki(r io.Reader, w io.Writer) error {
 		}
 
 		if isHeader {
+			record = append(record, "classification")
 			if err := csvWriter.Write(record); err != nil {
 				return err
 			}
@@ -29,11 +29,8 @@ func Kaiseki(r io.Reader, w io.Writer) error {
 			continue
 		}
 
-		ret := []string{}
-		ret = append(ret, record...)
-		csvWriter.Write(ret)
-		// 一旦決め打ちで2列目
-		fmt.Println(record[1])
+		record = append(record, "ret")
+		csvWriter.Write(record)
 	}
 
 	csvWriter.Flush()
