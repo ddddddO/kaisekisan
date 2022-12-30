@@ -66,8 +66,6 @@ func (f *filter) second() *filter {
 	return f
 }
 
-// 以下、filtered structみたいなのを作って、そっちにメソッドはやしたい。Stringメソッドも定義しておけば楽
-
 // TODO: ちょっと広すぎるかも...
 func (f *filter) isID() bool {
 	return strings.Contains(f.origin, `-`)
