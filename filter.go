@@ -13,6 +13,7 @@ func (f *filter) String() string {
 	return f.filtered
 }
 
+// Kagome由来の分類にフィルター
 func (f *filter) first() *filter {
 	filtered := ""
 	ippan := 0
@@ -42,6 +43,7 @@ func (f *filter) first() *filter {
 	return f
 }
 
+// 独自の分類にフィルター
 func (f *filter) second() *filter {
 	if f.filtered == "数" {
 		if f.isPhoneNumber() {
