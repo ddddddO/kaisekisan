@@ -84,13 +84,35 @@ func (t *tokenizerKagome) Analyze(in string) string {
 	for _, token := range tokens {
 		// pos := strings.Join(token.POS(), "/")
 		// return fmt.Sprintf("%v (origin: %s)", pos, token.Surface)
-		return t.filter(token.POS())
+		return t.filter(in, token.POS())
 		// TODO: 一旦、解析結果の最初の行のみ
 	}
-	return ""
+	return "不明"
 }
 
-func (*tokenizerKagome) filter(ss []string) string {
+func (t *tokenizerKagome) filter(origin string, ss []string) string {
+	filtered := t.filterFirst(ss)
+	if filtered == "数" {
+		if t.isPhoneNumber(origin) {
+			return "電話番号"
+		}
+		if t.isPostCode(origin) {
+			return "郵便番号"
+		}
+		return filtered
+	}
+
+	if filtered == "一般" {
+		if t.isID(origin) {
+			return "ID"
+		}
+		return filtered
+	}
+
+	return filtered
+}
+
+func (*tokenizerKagome) filterFirst(ss []string) string {
 	filtered := ""
 	ippan := 0
 	sei := 0
@@ -114,4 +136,43 @@ func (*tokenizerKagome) filter(ss []string) string {
 		return ss[sei-1]
 	}
 	return filtered
+}
+
+// 以下、filtered structみたいなのを作って、そっちにメソッドはやしたい。Stringメソッドも定義しておけば楽
+
+// TODO: ちょっと広すぎるかも...
+func (*tokenizerKagome) isID(origin string) bool {
+	return strings.Contains(origin, `-`)
+}
+
+// TODO:
+func (t *tokenizerKagome) isPhoneNumber(origin string) bool {
+	if t.isMobilePhoneNumber(origin) {
+		return true
+	}
+	if t.isShigaikyokuban(origin) {
+		return true
+	}
+	return false
+}
+
+var mobilePhonePrefixies = []string{"070", "080", "090"}
+
+func (*tokenizerKagome) isMobilePhoneNumber(origin string) bool {
+	for i := range mobilePhonePrefixies {
+		if strings.HasPrefix(origin, mobilePhonePrefixies[i]) {
+			return true
+		}
+	}
+	return false
+}
+
+// TODO: 03-xxxxなど
+func (*tokenizerKagome) isShigaikyokuban(origin string) bool {
+	return false
+}
+
+// TODO: 多分他のAPI使わせてもらうかな...レートリミットとかAPI KEY必要とか心配
+func (*tokenizerKagome) isPostCode(origin string) bool {
+	return false
 }

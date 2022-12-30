@@ -1,5 +1,7 @@
 # kaisekisan
 
+Using by [Kagome v2](https://github.com/ikawaha/kagome). Thanks!
+
 ## Installation
 
 Go
