@@ -36,7 +36,7 @@ no,text,description
 8,ts-9999,idっぽいの
 
 $ kaisekisan test.csv 2
-Succeeded!
+Succeeded! Destination -> /path/to/csv/test_out.csv
 
 $ cat test_out.csv
 no,text,classification,description

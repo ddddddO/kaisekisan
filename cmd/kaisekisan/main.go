@@ -56,7 +56,7 @@ func main() {
 		exit(err)
 	}
 
-	fmt.Fprintln(os.Stdin, "Succeeded!")
+	fmt.Fprintf(os.Stdout, "Succeeded! Destination -> %s\n", out)
 }
 
 func isNotExist(path string) bool {
