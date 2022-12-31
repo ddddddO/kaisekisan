@@ -21,6 +21,14 @@ func main() {
 		exit("Required file and target column number.")
 	}
 
+	columnNumber, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		exit(err)
+	}
+	if columnNumber <= 0 {
+		exit("Please specify 1 or more.")
+	}
+
 	in, err := filepath.Abs(os.Args[1])
 	if err != nil {
 		exit(err)
@@ -40,14 +48,6 @@ func main() {
 		exit(err)
 	}
 	defer outFile.Close()
-
-	columnNumber, err := strconv.Atoi(os.Args[2])
-	if err != nil {
-		exit(err)
-	}
-	if columnNumber <= 0 {
-		exit("Please specify 1 or more.")
-	}
 
 	if err := kaisekisan.Kaiseki(inFile, outFile, columnNumber); err != nil {
 		if err := os.Remove(out); err != nil {
