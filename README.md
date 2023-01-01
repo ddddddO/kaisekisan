@@ -4,21 +4,26 @@ Using by [Kagome v2](https://github.com/ikawaha/kagome). Thanks!
 
 ## Installation
 
-Go
+### Go
+
 ```console
 $ go install github.com/ddddddO/kaisekisan/cmd/kaisekisan@latest
 ```
 
-Homebrew
+### Homebrew
 ```console
 $ brew install ddddddO/tap/kaisekisan
 ```
 
-Scoop
+### Scoop
 ```console
 $ scoop bucket add ddddddO https://github.com/ddddddO/scoop-bucket.git
 $ scoop install ddddddO/kaisekisan
 ```
+
+### etc
+
+**download binary from [here](https://github.com/ddddddO/kaisekisan/releases).**
 
 ## Usage
 
