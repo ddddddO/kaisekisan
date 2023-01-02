@@ -2,6 +2,9 @@
 
 Using by [Kagome v2](https://github.com/ikawaha/kagome). Thanks!
 
+> **Warning**
+機械的に分類できますが、ちょっと違うかな?という分類をしてしまうことがあるので（自前のfilter関数がまだまだ充実していないため）、最後は人の目でチェックした方がいいです
+
 ## Installation
 
 ### Go
