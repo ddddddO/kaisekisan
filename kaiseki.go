@@ -45,7 +45,7 @@ func Kaiseki(r io.Reader, w io.Writer, columnNumber int) error {
 		// ここでスペースを削除しているのは、例えば、「千葉 真一」を与えると、「千葉」を解析してしまい、分類が地名になるため。
 		// 人名以外でもスペースが入る可能性はあるが、この際、スペースを削除することにした。
 		target := strings.ReplaceAll(record[columnNumber-1], " ", "")
-		result := t.Analyze(target)
+		result := t.analyze(target)
 		ret := insert(record, columnNumber, result)
 
 		csvWriter.Write(ret)
@@ -79,7 +79,7 @@ func newTokenizerKagome() (*tokenizerKagome, error) {
 	}, nil
 }
 
-func (t *tokenizerKagome) Analyze(in string) string {
+func (t *tokenizerKagome) analyze(in string) string {
 	tokens := t.Tokenize(in)
 	for _, token := range tokens {
 		// pos := strings.Join(token.POS(), "/")
