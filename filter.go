@@ -1,6 +1,8 @@
 package kaisekisan
 
-import "strings"
+import (
+	"strings"
+)
 
 type filter struct {
 	origin   string
@@ -18,6 +20,7 @@ func (f *filter) first() *filter {
 	filtered := ""
 	ippan := 0
 	sei := 0
+	kuni := 0
 	for i := range f.pos {
 		filtered = f.pos[i]
 		if filtered == "一般" {
@@ -25,6 +28,9 @@ func (f *filter) first() *filter {
 		}
 		if filtered == "姓" {
 			sei = i
+		}
+		if filtered == "国" {
+			kuni = i
 		}
 		if filtered == "*" {
 			filtered = f.pos[i-1]
@@ -39,6 +45,11 @@ func (f *filter) first() *filter {
 		f.filtered = f.pos[sei-1]
 		return f
 	}
+	if 3 <= kuni {
+		f.filtered = "地域"
+		return f
+	}
+
 	f.filtered = filtered
 	return f
 }
