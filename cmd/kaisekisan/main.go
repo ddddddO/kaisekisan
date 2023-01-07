@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -49,7 +50,8 @@ func main() {
 	}
 	defer outFile.Close()
 
-	if err := kaisekisan.Kaiseki(inFile, outFile, columnNumber); err != nil {
+	csvReader := csv.NewReader(inFile)
+	if err := kaisekisan.Kaiseki(csvReader, outFile, columnNumber); err != nil {
 		if err := os.Remove(out); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}

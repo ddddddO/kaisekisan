@@ -10,8 +10,7 @@ import (
 	"github.com/ikawaha/kagome/v2/tokenizer"
 )
 
-func Kaiseki(r io.Reader, w io.Writer, columnNumber int) error {
-	csvReader := csv.NewReader(r)
+func Kaiseki(csvReader *csv.Reader, w io.Writer, columnNumber int) error {
 	csvWriter := csv.NewWriter(w)
 	t, err := newTokenizerKagome()
 	if err != nil {
